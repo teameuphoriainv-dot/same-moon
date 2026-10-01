@@ -1,0 +1,331 @@
+/*
+ * Games. A panel down the side of the screen when it stands alone, a drawer
+ * under the video when it rides inside a call.
+ */
+
+.arcade {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: min(500px, 100%);
+  height: 100dvh;
+  padding: 1.4rem;
+  padding-bottom: calc(1.4rem + env(safe-area-inset-bottom));
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background-color: var(--night-2);
+  /* Two scatters of single dots, brass and rose, like a carpet in an arcade. */
+  background-image:
+    radial-gradient(rgba(242, 210, 135, 0.13) 1px, transparent 1.3px),
+    radial-gradient(rgba(201, 123, 132, 0.12) 1px, transparent 1.3px);
+  background-position:
+    0 0,
+    14px 20px;
+  background-size:
+    28px 28px,
+    40px 40px;
+  animation: chat-in 0.32s var(--ease) both;
+  box-shadow:
+    calc(-1 * var(--u)) 0 0 0 var(--px-edge),
+    inset var(--u) 0 0 0 #2b3450;
+}
+
+.arcade.embedded {
+  width: 100%;
+  height: auto;
+  max-height: 54dvh;
+  padding: 1rem;
+  animation: none;
+  box-shadow: inset 0 var(--u) 0 0 #2b3450;
+}
+
+.arc-title {
+  font-size: 1.5rem;
+}
+
+.arcade .chat-head {
+  padding-bottom: 0;
+}
+
+/* ---------- picking a game ---------- */
+
+.arc-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.arc-menu > .label:not(:first-child) {
+  margin-top: 0.8rem;
+}
+
+.arc-shelf {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.arc-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  padding: 0.9rem 0.85rem 0.8rem;
+  text-align: left;
+  color: var(--moonlight);
+  background: #161d30;
+  cursor: pointer;
+  box-shadow:
+    inset 0 var(--u) 0 0 #2b3450,
+    inset var(--u) 0 0 0 #2b3450,
+    inset 0 calc(-1 * var(--u)) 0 0 #0d1220,
+    inset calc(-1 * var(--u)) 0 0 0 #0d1220;
+}
+
+.arc-tile:hover:not(:disabled) {
+  background: #1c2439;
+}
+
+.arc-tile:active:not(:disabled) {
+  transform: translateY(var(--u));
+}
+
+.arc-tile:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.arc-tile-art {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 0.2rem;
+  background: #0b1020;
+  box-shadow: inset 0 0 0 2px #232c45;
+}
+
+.arc-tile-name {
+  font-family: var(--font-display), monospace;
+  font-size: 1.12rem;
+  line-height: 1.2;
+}
+
+.arc-tile .label {
+  line-height: 1.7;
+  color: var(--moon-dim);
+}
+
+.arc-score {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.arc-you {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--moon-dim);
+}
+
+.arc-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: auto;
+}
+
+/* ---------- boards ---------- */
+
+.ttt,
+.four,
+.pairs {
+  width: min(100%, 400px);
+  margin: 0 auto;
+  padding: var(--u);
+  background: #0b1020;
+  box-shadow:
+    0 calc(-1 * var(--u)) 0 0 var(--px-edge),
+    0 var(--u) 0 0 var(--px-edge),
+    calc(-1 * var(--u)) 0 0 0 var(--px-edge),
+    var(--u) 0 0 0 var(--px-edge);
+}
+
+.arcade.embedded .ttt,
+.arcade.embedded .four,
+.arcade.embedded .pairs {
+  width: min(100%, 300px);
+}
+
+.ttt {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--u);
+}
+
+.ttt-cell {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  background: #161d30;
+  box-shadow:
+    inset 0 var(--u) 0 0 #232c45,
+    inset var(--u) 0 0 0 #232c45,
+    inset 0 calc(-1 * var(--u)) 0 0 #0d1220,
+    inset calc(-1 * var(--u)) 0 0 0 #0d1220;
+}
+
+.ttt-cell:not(:disabled) {
+  cursor: pointer;
+}
+
+.ttt-cell:not(:disabled):hover {
+  background: #1f2840;
+}
+
+.ttt-cell .piece {
+  width: 62%;
+  height: auto;
+  animation: set-down 0.24s steps(4) both;
+}
+
+@keyframes set-down {
+  from {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+.ttt-cell.is-won,
+.four-cell.is-won {
+  background: #3a3220;
+  box-shadow: inset 0 0 0 var(--u) var(--brass);
+  animation: won 0.9s steps(2) infinite;
+}
+
+@keyframes won {
+  50% {
+    box-shadow: inset 0 0 0 var(--u) var(--brass-bright);
+  }
+}
+
+.four {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.four-col {
+  display: grid;
+  grid-template-rows: repeat(6, 1fr);
+  gap: 2px;
+  padding: 0;
+}
+
+.four-col:not(:disabled) {
+  cursor: pointer;
+}
+
+.four-col:not(:disabled):hover .four-cell {
+  background: #1f2840;
+}
+
+.four-cell {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  background: #161d30;
+  box-shadow: inset 0 0 0 2px #0d1220;
+}
+
+.four-disc {
+  display: block;
+  width: 82%;
+}
+
+.four-disc svg {
+  width: 100%;
+  height: auto;
+}
+
+/* It falls one square at a time, from above the top of the board. */
+.four-disc.is-new {
+  animation: fall calc(0.07s * var(--fall)) steps(var(--fall)) both;
+}
+
+@keyframes fall {
+  from {
+    transform: translateY(calc(-122% * var(--fall)));
+  }
+}
+
+.pairs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--u);
+}
+
+/* Face down: the back of the card, night blue with one brass pip. */
+.pair {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 4;
+  background-color: #1d2745;
+  background-image: radial-gradient(var(--brass) 3px, transparent 3.5px);
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow:
+    inset 0 var(--u) 0 0 #2f3b63,
+    inset var(--u) 0 0 0 #2f3b63,
+    inset 0 calc(-1 * var(--u)) 0 0 #121830,
+    inset calc(-1 * var(--u)) 0 0 0 #121830;
+}
+
+.pair:not(:disabled) {
+  cursor: pointer;
+}
+
+.pair:not(:disabled):hover {
+  background-color: #263258;
+}
+
+.pair.is-up {
+  background-color: var(--paper, #efe3c6);
+  background-image: none;
+  animation: turn-over 0.26s steps(4) both;
+  box-shadow:
+    inset 0 var(--u) 0 0 #fbf4df,
+    inset var(--u) 0 0 0 #fbf4df,
+    inset 0 calc(-1 * var(--u)) 0 0 #c9b88f,
+    inset calc(-1 * var(--u)) 0 0 0 #c9b88f;
+}
+
+@keyframes turn-over {
+  from {
+    transform: scaleX(0.1);
+  }
+}
+
+.pair svg {
+  width: 62%;
+  height: auto;
+}
+
+.pair.is-kept.by-daksha {
+  box-shadow: inset 0 0 0 var(--u) var(--rose);
+}
+
+.pair.is-kept.by-sriyan {
+  box-shadow: inset 0 0 0 var(--u) var(--brass);
+}
+
+@media (max-width: 620px) {
+  .arcade {
+    width: 100%;
+    padding: 1.1rem;
+    padding-bottom: calc(1.1rem + env(safe-area-inset-bottom));
+  }
+}

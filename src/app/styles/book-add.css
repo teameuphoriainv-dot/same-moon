@@ -1,0 +1,444 @@
+/*
+ * The storybook: the view of every page at once, the tools under an open
+ * page (arranging it, sealing it), and the sheet for adding one.
+ */
+
+/* ---------- every page at once ---------- */
+
+.story-all {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  align-content: start;
+  gap: 1.2rem 0.9rem;
+  width: min(880px, 92vw);
+  margin: 0 auto;
+  padding: 1.4rem 0 2rem;
+  list-style: none;
+}
+
+.story-all-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  cursor: pointer;
+}
+
+.story-all-card .thumb {
+  width: 84px;
+  height: 84px;
+  box-shadow:
+    0 0 0 4px var(--paper-lit),
+    0 0 0 7px var(--px-edge);
+  transition: transform 0.16s steps(2);
+}
+
+.story-all-card:hover .thumb {
+  transform: translateY(-4px);
+}
+
+/* The kiss in the corner of a sealed page's thumbnail. */
+.thumb-seal {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  display: block;
+  padding: 3px;
+  background: var(--paper-lit);
+  transform: rotate(-14deg);
+  box-shadow: 0 0 0 2px var(--px-edge);
+  filter: drop-shadow(1px 2px 0 rgba(0, 0, 0, 0.35));
+}
+
+/* ---------- under a page ---------- */
+
+.leaf-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  width: min(92vw, 470px);
+  min-height: 3.4rem;
+  padding-top: 0.5rem;
+}
+
+.leaf-sealed-note {
+  padding: 0.6rem 0;
+  color: var(--brass);
+}
+
+/* ---- arranging ---- */
+
+.arrange {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.3rem 0 0.2rem;
+}
+
+.arrange-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.arrange-hint {
+  margin: 0;
+  text-align: center;
+}
+
+/* A square a thumb can land on: a glyph over a word. */
+.tool-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  min-width: 56px;
+  min-height: 54px;
+  padding: 0.4rem 0.5rem;
+  color: var(--moonlight);
+  background: #161d30;
+  cursor: pointer;
+  box-shadow:
+    inset 0 var(--u) 0 0 #2b3450,
+    inset var(--u) 0 0 0 #2b3450,
+    inset 0 calc(-1 * var(--u)) 0 0 #0d1220,
+    inset calc(-1 * var(--u)) 0 0 0 #0d1220;
+}
+
+.tool-btn:hover:not(:disabled) {
+  background: #1b2337;
+}
+
+.tool-btn:active:not(:disabled) {
+  transform: translateY(var(--u));
+  box-shadow:
+    inset 0 calc(-1 * var(--u)) 0 0 #2b3450,
+    inset calc(-1 * var(--u)) 0 0 0 #2b3450,
+    inset 0 var(--u) 0 0 #0d1220,
+    inset var(--u) 0 0 0 #0d1220;
+}
+
+.tool-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.tool-btn.is-on {
+  background: #232b45;
+  box-shadow: inset 0 0 0 var(--u) var(--brass);
+}
+
+.tool-btn.is-danger {
+  color: var(--rose);
+}
+
+.tool-glyph {
+  display: grid;
+  place-items: center;
+  height: 20px;
+  font-family: var(--font-display), monospace;
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.tool-name {
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--moon-faint);
+}
+
+.tool-tape {
+  width: 26px;
+  height: 9px;
+  background: rgba(216, 169, 75, 0.8);
+  transform: rotate(-18deg);
+  clip-path: polygon(0 0, 6% 25%, 0 50%, 6% 75%, 0 100%, 100% 100%, 94% 75%, 100% 50%, 94% 25%, 100% 0);
+}
+
+.tool-text {
+  font-size: 1.05rem;
+}
+
+.arrange-done {
+  align-self: center;
+  margin-left: 0.5rem;
+  padding: 0.9rem 1.3rem;
+}
+
+/* Every sticker on the sheet, to tap one onto the page. */
+.arrange-sheet {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+  gap: 0.3rem;
+  padding: 0.6rem;
+  background: #0f1523;
+  box-shadow:
+    inset 0 0 0 var(--u) #1d2438,
+    0 0 0 var(--u) var(--px-edge);
+  animation: fade 0.2s steps(3) both;
+}
+
+.sheet-btn {
+  display: grid;
+  place-items: center;
+  min-height: 52px;
+  background: var(--paper);
+  cursor: pointer;
+  box-shadow: inset 0 0 0 2px var(--paper-shade);
+  transition: transform 0.12s steps(2);
+}
+
+.sheet-btn:hover:not(:disabled) {
+  background: var(--paper-lit);
+  transform: translateY(-2px);
+}
+
+.sheet-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ---- sealing ---- */
+
+.seal-btn {
+  color: var(--rose);
+}
+
+.seal-btn:hover:not(:disabled) {
+  color: #e3a3aa;
+}
+
+.kiss-seal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.3rem 0 0.4rem;
+}
+
+.kiss-warn {
+  max-width: 34ch;
+  margin: 0;
+  font-family: var(--font-serif), Georgia, serif;
+  font-style: italic;
+  font-size: 1.02rem;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--moon-dim);
+}
+
+.kiss-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+/* The lips sit in the ring. Holding them, the ring fills and they grow. */
+.kiss-lips {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.kiss-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.kiss-lips-art {
+  display: block;
+  transform: scale(calc(1 + var(--p, 0) * 0.3));
+  filter: drop-shadow(0 0 calc(var(--p, 0) * 6px) rgba(227, 163, 170, 0.8));
+}
+
+.kiss-lips.is-kissed .kiss-lips-art {
+  animation: kiss-pop 0.5s steps(5) both;
+}
+
+@keyframes kiss-pop {
+  0% {
+    transform: scale(1.3);
+  }
+  50% {
+    transform: scale(0.6, 0.5);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.kiss-hint {
+  min-width: 7ch;
+  text-align: center;
+}
+
+/* ---------- adding a page ---------- */
+
+.story-panel-scrim {
+  z-index: 60;
+  align-items: start;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.story-panel {
+  width: min(480px, 100%);
+  margin: auto;
+}
+
+.story-panel-title {
+  font-size: 1.5rem;
+}
+
+.story-step {
+  min-width: 0;
+  margin: 1.3rem 0 0;
+  padding: 0;
+  border: none;
+}
+
+.story-step legend {
+  padding: 0;
+  margin-bottom: 0.6rem;
+}
+
+.story-choices,
+.story-charms {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.story-choices {
+  grid-template-columns: 1fr 1fr;
+}
+
+.story-charms {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.story-choice,
+.story-charm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.9rem 0.8rem;
+  text-align: left;
+  color: var(--moonlight);
+  background: #161d30;
+  cursor: pointer;
+  box-shadow:
+    inset 0 var(--u) 0 0 #2b3450,
+    inset var(--u) 0 0 0 #2b3450,
+    inset 0 calc(-1 * var(--u)) 0 0 #0d1220,
+    inset calc(-1 * var(--u)) 0 0 0 #0d1220;
+}
+
+.story-charm {
+  align-items: center;
+  padding: 0.8rem 0.3rem 0.6rem;
+  text-align: center;
+}
+
+.story-choice:hover:not(:disabled),
+.story-charm:hover {
+  background: #1b2337;
+}
+
+.story-choice:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.story-choice.is-on,
+.story-charm.is-on {
+  background: #232b45;
+  box-shadow: inset 0 0 0 var(--u) var(--brass);
+}
+
+.story-choice-name {
+  font-family: var(--font-display), monospace;
+  font-size: 1.15rem;
+}
+
+.story-choice .label,
+.story-charm .label {
+  line-height: 1.5;
+}
+
+/* Kept in the page so the button can open it, and out of sight. */
+.story-file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.story-preview {
+  display: block;
+  max-width: 100%;
+  max-height: 240px;
+  margin: 1.2rem auto 0;
+  box-shadow:
+    0 0 0 4px var(--paper-lit),
+    0 0 0 7px var(--px-edge);
+}
+
+.story-preview-art {
+  width: 200px;
+}
+
+.sheet .story-words {
+  min-height: 0;
+  margin-top: 0;
+}
+
+.story-when {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+}
+
+.story-date {
+  width: auto;
+  margin-top: 0;
+  letter-spacing: 0.08em;
+  color-scheme: dark;
+}
+
+.story-error {
+  margin-top: 1.1rem;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--rose);
+}

@@ -1,0 +1,228 @@
+/*
+ * The storybook.
+ *
+ * Everything else on the site is night. The pages of the book are the one
+ * place that is pale, on purpose: a page should read as paper lying on a dark
+ * desk, a real thing with photos stuck to it.
+ */
+
+:root {
+  --paper: #efe3c6;
+  --paper-lit: #fbf4df;
+  --paper-shade: #c9b88f;
+  --on-paper: #2a2118;
+  --on-paper-soft: #74634a;
+}
+
+/* ---------- on the front page ---------- */
+
+.story-body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1.6rem, 5vw, 4rem);
+}
+
+/* The closed book. A cover, with the edge of the pages showing down one side. */
+.story-cover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  width: clamp(190px, 46vw, 240px);
+  aspect-ratio: 4 / 5;
+  margin: var(--u);
+  padding: 1.2rem;
+  color: var(--moonlight);
+  background: #1a2138;
+  cursor: pointer;
+  transition: transform 0.16s steps(2);
+  box-shadow:
+    0 calc(-1 * var(--u)) 0 0 var(--px-edge),
+    0 var(--u) 0 0 var(--px-edge),
+    calc(-1 * var(--u)) 0 0 0 var(--px-edge),
+    var(--u) 0 0 0 var(--px-edge),
+    inset 0 var(--u) 0 0 var(--brass),
+    inset var(--u) 0 0 0 var(--brass-deep),
+    inset 0 calc(-1 * var(--u)) 0 0 var(--brass-deep),
+    inset calc(-1 * var(--u)) 0 0 0 var(--brass-deep),
+    inset calc(3 * var(--u)) 0 0 0 #131930,
+    calc(3 * var(--u)) var(--u) 0 0 var(--paper-shade),
+    calc(3 * var(--u)) calc(2 * var(--u)) 0 0 var(--px-edge),
+    calc(4 * var(--u)) var(--u) 0 0 var(--px-edge);
+}
+
+.story-cover:hover {
+  transform: translateY(calc(-1 * var(--u)));
+}
+
+.story-cover:active {
+  transform: translateY(0);
+}
+
+/* Gold foil: brass with a glint that sweeps across it now and then. */
+.cover-title {
+  font-family: var(--font-display), monospace;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.1;
+  text-align: center;
+  color: var(--brass-bright);
+  background-image: linear-gradient(
+    100deg,
+    var(--brass-bright) 0 42%,
+    #fff6d6 47% 50%,
+    var(--brass) 55% 58%,
+    var(--brass-bright) 64%
+  );
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: foil 6s steps(24) infinite;
+}
+
+@keyframes foil {
+  0%,
+  70% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.cover-names {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display), monospace;
+  font-size: 1rem;
+  color: var(--moonlight);
+}
+
+.cover-names .sprite-heart {
+  width: 16px;
+  height: 16px;
+}
+
+.story-line {
+  max-width: 44ch;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 1.25rem;
+  line-height: 1.45;
+  color: var(--moon-dim);
+}
+
+.story-recent {
+  display: flex;
+  gap: 0.9rem;
+  margin-top: 1.4rem;
+}
+
+.story-recent-card {
+  padding: 5px 5px 7px;
+  background: var(--paper-lit);
+  cursor: pointer;
+  transition: transform 0.16s steps(2);
+  box-shadow:
+    0 0 0 3px var(--px-edge),
+    4px 4px 0 3px rgba(5, 7, 13, 0.6);
+}
+
+.story-recent-card:nth-child(odd) {
+  transform: rotate(-2.5deg);
+}
+
+.story-recent-card:nth-child(even) {
+  transform: rotate(2deg);
+}
+
+.story-recent-card:hover {
+  transform: translateY(-4px);
+}
+
+.story-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 720px) {
+  .story-body {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .story-recent,
+  .story-actions {
+    justify-content: center;
+  }
+}
+
+/* ---------- a page, small ---------- */
+
+.thumb {
+  position: relative;
+  display: block;
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  background-color: var(--paper-shade);
+  background-position: center;
+  background-size: cover;
+  image-rendering: pixelated;
+}
+
+.thumb-doodle svg {
+  width: 100%;
+  height: 100%;
+}
+
+.thumb-note {
+  padding: 6px;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 0.62rem;
+  line-height: 1.25;
+  text-align: left;
+  color: var(--on-paper);
+  background-color: var(--paper);
+  image-rendering: auto;
+}
+
+/* ---------- the garden ---------- */
+
+.garden {
+  margin-top: 2.6rem;
+}
+
+/* Plants stand on the row's bottom edge, which is drawn as a strip of ground. */
+.garden-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0 10px;
+  padding: 0 6px;
+  box-shadow: inset 0 calc(-1 * var(--u)) 0 0 #16243a;
+}
+
+.garden-plant {
+  padding-bottom: var(--u);
+  animation: sprout 0.5s steps(5) both;
+}
+
+@keyframes sprout {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.garden-more {
+  margin-top: 0.6rem;
+}

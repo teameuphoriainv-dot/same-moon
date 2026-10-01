@@ -1,0 +1,356 @@
+/*
+ * Calls. The ring screens are the night sky with the moon in the middle. Once
+ * the call is up, the picture is the whole screen and the controls sit under it.
+ */
+
+.call-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  animation: fade 0.3s steps(4) both;
+  background:
+    radial-gradient(90ch 60ch at 50% 28%, rgba(216, 169, 75, 0.2), transparent 64%),
+    linear-gradient(178deg, #0c1224 0%, var(--ink) 60%, #04060b 100%);
+}
+
+.call-screen.is-live {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: clamp(0.5rem, 2vw, 1.1rem);
+  padding-top: calc(clamp(0.5rem, 2vw, 1.1rem) + env(safe-area-inset-top));
+  padding-bottom: calc(clamp(0.5rem, 2vw, 1.1rem) + env(safe-area-inset-bottom));
+  background: #04060b;
+}
+
+/* Your own picture, filling the screen and dimmed, behind an outgoing ring. */
+.call-behind {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.32;
+}
+
+.is-mirrored {
+  transform: scaleX(-1);
+}
+
+/* ---------- ringing ---------- */
+
+.call-ring {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: min(440px, 100%);
+  padding: 2rem 1.4rem calc(2rem + env(safe-area-inset-bottom));
+  text-align: center;
+}
+
+.ring-moon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 148px;
+  height: 148px;
+  margin-bottom: 2.2rem;
+  filter: drop-shadow(0 0 50px rgba(244, 233, 212, 0.3));
+}
+
+/* Rings leave the moon in steps and thin out as they go. */
+.ring-wave {
+  position: absolute;
+  inset: -8px;
+  animation: ring-out 2.4s steps(10) infinite;
+}
+
+.ring-wave.is-late {
+  animation-delay: 1.2s;
+}
+
+@keyframes ring-out {
+  from {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.9);
+  }
+}
+
+.call-who {
+  font-family: var(--font-display), monospace;
+  font-weight: 600;
+  font-size: clamp(2.2rem, 10vw, 3.4rem);
+  line-height: 1;
+  color: var(--moonlight);
+  text-shadow: 0 0 40px rgba(244, 233, 212, 0.3);
+}
+
+.call-note {
+  max-width: 34ch;
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--moon-dim);
+}
+
+.call-note.is-wrong {
+  color: var(--rose);
+}
+
+/* ---------- the keys ---------- */
+
+.call-keys {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 0.9rem;
+}
+
+.call-keys.is-answer {
+  gap: 0.5rem 2rem;
+  margin-top: 2rem;
+}
+
+.call-key {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 4.2rem;
+  color: var(--moonlight);
+  cursor: pointer;
+}
+
+.call-key-face {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin: var(--u);
+  background: #1d2438;
+  box-shadow:
+    0 calc(-1 * var(--u)) 0 0 var(--px-edge),
+    0 var(--u) 0 0 var(--px-edge),
+    calc(-1 * var(--u)) 0 0 0 var(--px-edge),
+    var(--u) 0 0 0 var(--px-edge),
+    inset 0 var(--u) 0 0 #2b3450,
+    inset var(--u) 0 0 0 #2b3450,
+    inset 0 calc(-1 * var(--u)) 0 0 #0d1220,
+    inset calc(-1 * var(--u)) 0 0 0 #0d1220;
+}
+
+.call-key:hover .call-key-face {
+  background: #242c44;
+}
+
+.call-key:active .call-key-face {
+  transform: translateY(var(--u));
+}
+
+.call-key-name {
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--moon-dim);
+}
+
+.call-keys.is-answer .call-key-face {
+  width: 68px;
+  height: 68px;
+}
+
+.call-key.is-go .call-key-face {
+  color: #0d1a08;
+  background: var(--live);
+  box-shadow:
+    0 calc(-1 * var(--u)) 0 0 var(--px-edge),
+    0 var(--u) 0 0 var(--px-edge),
+    calc(-1 * var(--u)) 0 0 0 var(--px-edge),
+    var(--u) 0 0 0 var(--px-edge),
+    inset 0 var(--u) 0 0 var(--live-bright),
+    inset var(--u) 0 0 0 var(--live-bright),
+    inset 0 calc(-1 * var(--u)) 0 0 #5d8a4e,
+    inset calc(-1 * var(--u)) 0 0 0 #5d8a4e;
+}
+
+.call-key.is-go:hover .call-key-face {
+  background: var(--live-bright);
+}
+
+.call-key.is-stop .call-key-face {
+  color: #17070a;
+  background: var(--rose);
+  box-shadow:
+    0 calc(-1 * var(--u)) 0 0 var(--px-edge),
+    0 var(--u) 0 0 var(--px-edge),
+    calc(-1 * var(--u)) 0 0 0 var(--px-edge),
+    var(--u) 0 0 0 var(--px-edge),
+    inset 0 var(--u) 0 0 #e3a3aa,
+    inset var(--u) 0 0 0 #e3a3aa,
+    inset 0 calc(-1 * var(--u)) 0 0 #8e4f58,
+    inset calc(-1 * var(--u)) 0 0 0 #8e4f58;
+}
+
+.call-key.is-stop:hover .call-key-face {
+  background: #d78d96;
+}
+
+/* Switched off: the glyph goes rose, the key stays dark. */
+.call-key.is-off .call-key-face {
+  color: var(--rose);
+  box-shadow:
+    0 calc(-1 * var(--u)) 0 0 var(--px-edge),
+    0 var(--u) 0 0 var(--px-edge),
+    calc(-1 * var(--u)) 0 0 0 var(--px-edge),
+    var(--u) 0 0 0 var(--px-edge),
+    inset 0 0 0 var(--u) rgba(201, 123, 132, 0.6);
+}
+
+.call-key.is-off .call-key-name {
+  color: var(--rose);
+}
+
+/* ---------- the call ---------- */
+
+.call-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: #05070d;
+  box-shadow: inset 0 0 0 var(--u) #1d2438;
+}
+
+.call-main {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #05070d;
+}
+
+.is-dark {
+  visibility: hidden;
+}
+
+.call-cover {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 1.4rem;
+  text-align: center;
+  background: rgba(5, 7, 13, 0.88);
+}
+
+.call-cover .call-who {
+  font-size: clamp(1.6rem, 7vw, 2.4rem);
+}
+
+.call-tag {
+  position: absolute;
+  top: 0.8rem;
+  left: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--moonlight);
+  background: rgba(5, 7, 13, 0.76);
+}
+
+.call-dot {
+  width: 8px;
+  height: 8px;
+  box-shadow: inset 0 0 0 2px var(--moon-ghost);
+}
+
+.call-dot.is-live {
+  background: var(--live);
+  box-shadow: 0 0 8px var(--live);
+}
+
+.call-timer {
+  color: var(--moon-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.call-inset {
+  position: absolute;
+  right: calc(var(--u) + 0.5rem);
+  bottom: calc(var(--u) + 0.5rem);
+  width: clamp(92px, 24vw, 160px);
+  aspect-ratio: 3 / 4;
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  background: #0b1020;
+  box-shadow:
+    0 calc(-1 * var(--u)) 0 0 var(--px-edge),
+    0 var(--u) 0 0 var(--px-edge),
+    calc(-1 * var(--u)) 0 0 0 var(--px-edge),
+    var(--u) 0 0 0 var(--px-edge),
+    0 0 0 calc(2 * var(--u)) #2b3450;
+}
+
+.call-inset-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.call-inset-off {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0.4rem;
+  text-align: center;
+  color: var(--moon-faint);
+}
+
+.call-screen.is-live > .call-note {
+  align-self: center;
+  margin: 0;
+}
+
+/* ---------- after a call ---------- */
+
+.after-call {
+  text-align: center;
+}
+
+.after-call-time {
+  margin: 0.3rem 0 0.2rem;
+  font-family: var(--font-display), monospace;
+  font-weight: 600;
+  font-size: clamp(1.8rem, 8vw, 2.4rem);
+  line-height: 1.1;
+  color: var(--moonlight);
+}
+
+.after-call .call-note {
+  margin: 0.6rem auto 0;
+}
+
+.after-call .sheet-actions {
+  justify-content: center;
+}

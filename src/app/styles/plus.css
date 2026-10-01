@@ -1,0 +1,95 @@
+/*
+ * Same Moon Plus. Rides on the shared .scrim, .sheet and .sheet-actions, and
+ * only adds the type and the two moons on top.
+ */
+
+.plus-sheet {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+.plus-moons {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.2rem;
+}
+
+.plus-heart {
+  width: 20px;
+  height: 20px;
+  animation: beat 1.5s steps(2) infinite;
+}
+
+.plus-title {
+  font-family: var(--font-display), monospace;
+  font-weight: 600;
+  font-size: 1.6rem;
+  line-height: 1.15;
+  color: var(--moonlight);
+}
+
+.plus-line {
+  max-width: 32ch;
+  font-family: var(--font-display), monospace;
+  font-size: 1rem;
+  line-height: 1.45;
+  color: var(--moon-dim);
+}
+
+.plus-note {
+  color: var(--moonlight);
+}
+
+.plus-error {
+  color: var(--rose);
+}
+
+.plus-status {
+  animation: plus-wait 1.2s steps(2) infinite;
+}
+
+@keyframes plus-wait {
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.plus-price {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 0.3rem;
+  font-family: var(--font-display), monospace;
+  font-weight: 600;
+  font-size: 2.2rem;
+  line-height: 1.1;
+  color: var(--brass-bright);
+}
+
+.plus-actions {
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 0.4rem;
+}
+
+/* A quiet text button: no box, just the word. */
+.plus-restore {
+  padding: 0.4rem 0.6rem;
+  font-size: var(--label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--moon-faint);
+}
+
+.plus-restore:hover:not(:disabled) {
+  color: var(--brass);
+}
+
+.plus-restore:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}

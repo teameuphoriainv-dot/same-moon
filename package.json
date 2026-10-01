@@ -1,0 +1,33 @@
+{
+  "name": "same-moon",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "predev": "node scripts/build-photo-manifest.mjs",
+    "dev": "next dev -p 8931",
+    "prebuild": "node scripts/build-photo-manifest.mjs",
+    "build": "next build",
+    "start": "next start -p 8931",
+    "typecheck": "tsc --noEmit",
+    "photos": "node scripts/build-photo-manifest.mjs",
+    "pretest": "rm -rf .test-build && tsc src/lib/decks.ts src/lib/birthday.ts src/lib/sprites.ts src/lib/ago.ts src/lib/here.ts src/lib/pages.ts src/lib/layout.ts src/lib/ideas.ts src/lib/strokes.ts src/lib/art/palette.ts src/lib/art/icons.ts src/lib/art/scenery.ts src/lib/art/stickers.ts src/lib/art/pieces.ts src/lib/art/inks.ts --outDir .test-build --target es2022 --module es2022 --moduleResolution bundler --skipLibCheck && node scripts/prep-tests.mjs",
+    "test": "node --test \"tests/**/*.test.mjs\""
+  },
+  "dependencies": {
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/ios": "^8.5.2",
+    "@revenuecat/purchases-capacitor": "^13.6.1",
+    "@vercel/blob": "^2.8.0",
+    "next": "^15.5.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "spacetimedb": "^2.4.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.2",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.6.0"
+  }
+}

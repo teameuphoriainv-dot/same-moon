@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <title>Same Moon</title>
+    <style>
+      :root {
+        --night: #0a0f1c;
+        --moonlight: #f4e9d4;
+        --moon-dim: rgba(244, 233, 212, 0.6);
+        --brass: #d8a94b;
+        --brass-bright: #f2d287;
+        --px-edge: #05070d;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: var(--night);
+        color: var(--moonlight);
+        font-family: ui-monospace, "SF Mono", Menlo, monospace;
+        -webkit-text-size-adjust: 100%;
+      }
+      main {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
+        text-align: center;
+      }
+      /* A blocky moon drawn with box-shadow pixels, so it needs no image or font. */
+      .moon {
+        width: 8px;
+        height: 8px;
+        margin-bottom: 48px;
+        image-rendering: pixelated;
+        box-shadow:
+          16px 0 #f2e6ca, 24px 0 #f2e6ca, 32px 0 #f2e6ca,
+          8px 8px #f2e6ca, 16px 8px #f2e6ca, 24px 8px #f2e6ca, 32px 8px #d9c9a6, 40px 8px #f2e6ca,
+          0 16px #f2e6ca, 8px 16px #d9c9a6, 16px 16px #f2e6ca, 24px 16px #f2e6ca, 32px 16px #f2e6ca, 40px 16px #f2e6ca, 48px 16px #f2e6ca,
+          0 24px #f2e6ca, 8px 24px #f2e6ca, 16px 24px #f2e6ca, 24px 24px #f2e6ca, 32px 24px #f2e6ca, 40px 24px #d9c9a6, 48px 24px #f2e6ca,
+          0 32px #f2e6ca, 8px 32px #f2e6ca, 16px 32px #f2e6ca, 24px 32px #d9c9a6, 32px 32px #f2e6ca, 40px 32px #f2e6ca, 48px 32px #f2e6ca,
+          8px 40px #f2e6ca, 16px 40px #f2e6ca, 24px 40px #f2e6ca, 32px 40px #f2e6ca, 40px 40px #f2e6ca,
+          16px 48px #f2e6ca, 24px 48px #f2e6ca, 32px 48px #f2e6ca;
+        transform: translateX(-24px);
+      }
+      h1 {
+        margin: 0;
+        font-size: 1.6rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+      p {
+        margin: 0;
+        max-width: 28ch;
+        line-height: 1.5;
+        color: var(--moon-dim);
+      }
+      button {
+        margin-top: 8px;
+        padding: 12px 22px;
+        font: inherit;
+        font-weight: 700;
+        color: var(--px-edge);
+        background: var(--brass);
+        border: 0;
+        box-shadow:
+          0 -4px 0 var(--px-edge),
+          0 4px 0 var(--px-edge),
+          -4px 0 0 var(--px-edge),
+          4px 0 0 var(--px-edge),
+          inset 0 -4px 0 #8c6a25;
+        cursor: pointer;
+      }
+      button:active {
+        background: var(--brass-bright);
+        transform: translateY(2px);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="moon" aria-hidden="true"></div>
+      <h1>Same Moon</h1>
+      <p>Same Moon needs the internet to reach the two of you. Check your connection, then try again.</p>
+      <button id="retry" type="button">Try again</button>
+    </main>
+    <script>
+      // The hosted app's address lives in the native project, so the shell asks
+      // native code to load it again. In a browser this just reloads.
+      document.getElementById("retry").addEventListener("click", function () {
+        var cap = window.Capacitor;
+        if (cap && cap.isNativePlatform && cap.isNativePlatform() && cap.nativePromise) {
+          cap.nativePromise("SameMoonShell", "retry", {}).catch(function () {
+            window.location.reload();
+          });
+        } else {
+          window.location.reload();
+        }
+      });
+    </script>
+  </body>
+</html>

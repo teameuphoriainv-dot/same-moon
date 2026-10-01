@@ -1,0 +1,493 @@
+/*
+ * The storybook, open: the desk it lies on, the pages, and turning them.
+ * The colours of the paper are set in storybook.css; the tools under a page
+ * (arranging, sealing) are in book-add.css.
+ */
+
+/* ---------- the book, open ---------- */
+
+.story-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  display: flex;
+  flex-direction: column;
+  /* A page slides in from the side, and must not drag a scrollbar in with it. */
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  animation: fade 0.3s steps(4) both;
+  /* A desk: a lamp somewhere above, and planks with a dark seam between them. */
+  background:
+    radial-gradient(70ch 44ch at 50% -12%, rgba(242, 210, 135, 0.16), transparent 70%),
+    repeating-linear-gradient(90deg, #0d111d 0 124px, #070a12 124px 128px),
+    #0b0f19;
+}
+
+.story-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem clamp(1rem, 4vw, 2.2rem) 0.2rem;
+  padding-top: calc(1rem + env(safe-area-inset-top));
+}
+
+.story-head-tools {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.2rem;
+}
+
+.story-stage {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 1rem 0 1.4rem;
+  touch-action: pan-y;
+}
+
+.book {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: calc(2 * var(--u));
+}
+
+.leaf-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.turn-next {
+  animation: turn-next 0.34s steps(6) both;
+}
+
+.turn-prev {
+  animation: turn-prev 0.34s steps(6) both;
+}
+
+@keyframes turn-next {
+  from {
+    opacity: 0;
+    transform: translateX(32px);
+  }
+}
+
+@keyframes turn-prev {
+  from {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+}
+
+/* ---------- a page ---------- */
+
+.leaf {
+  --leaf-w: min(86vw, 430px);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: var(--leaf-w);
+  margin: var(--u);
+  padding: calc(var(--leaf-w) * 0.07) calc(var(--leaf-w) * 0.065) calc(var(--leaf-w) * 0.04);
+  color: var(--on-paper);
+  background-color: var(--paper);
+  /* Paper: a grid of single dots over a faint diagonal dither, so it is
+     neither flat nor smooth. No images, just gradients. */
+  background-image:
+    radial-gradient(rgba(140, 106, 37, 0.13) 1px, transparent 1.2px),
+    repeating-linear-gradient(45deg, rgba(255, 250, 235, 0.16) 0 2px, transparent 2px 6px);
+  background-size:
+    8px 8px,
+    auto;
+  box-shadow:
+    0 calc(-1 * var(--u)) 0 0 var(--px-edge),
+    0 var(--u) 0 0 var(--px-edge),
+    calc(-1 * var(--u)) 0 0 0 var(--px-edge),
+    var(--u) 0 0 0 var(--px-edge),
+    inset 0 var(--u) 0 0 var(--paper-lit),
+    inset var(--u) 0 0 0 var(--paper-lit),
+    inset 0 calc(-1 * var(--u)) 0 0 var(--paper-shade),
+    inset calc(-1 * var(--u)) 0 0 0 var(--paper-shade),
+    calc(2 * var(--u)) calc(3 * var(--u)) 0 0 rgba(0, 0, 0, 0.42);
+}
+
+/* Anything dragged past the edge is cut off at the paper, as it would be. */
+.leaf-photo,
+.leaf-doodle,
+.leaf-note {
+  overflow: hidden;
+}
+
+/* Laid open, each page darkens a little toward the spine. */
+.is-spread .leaf-wrap:first-child .leaf::after,
+.is-spread .leaf-wrap:last-child .leaf::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+}
+
+.is-spread .leaf-wrap:first-child .leaf::after {
+  background: linear-gradient(90deg, transparent 0 78%, rgba(42, 33, 24, 0.05) 78% 88%, rgba(42, 33, 24, 0.1) 88% 95%, rgba(42, 33, 24, 0.18) 95%);
+}
+
+.is-spread .leaf-wrap:last-child .leaf::after {
+  background: linear-gradient(270deg, transparent 0 78%, rgba(42, 33, 24, 0.05) 78% 88%, rgba(42, 33, 24, 0.1) 88% 95%, rgba(42, 33, 24, 0.18) 95%);
+}
+
+/* The canvas everything is stuck to. Its shape is fixed, so a position in
+   permille lands in the same place on a phone and a laptop. */
+.leaf-canvas {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+}
+
+.pg-item {
+  position: absolute;
+  /* Font sizes inside scale with the item, via cqw. */
+  container-type: inline-size;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.is-arranging .pg-item {
+  touch-action: none;
+  cursor: grab;
+}
+
+.is-arranging .pg-item:active {
+  cursor: grabbing;
+}
+
+.is-arranging .pg-item.is-selected {
+  outline: 2px dashed var(--brass);
+  outline-offset: 5px;
+  /* Whatever is picked up sits over the rest. */
+  z-index: 30 !important;
+}
+
+/* ---- the photo ---- */
+
+.photo-card {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 4% 4% 6%;
+  background: #fffdf5;
+  box-shadow:
+    0 0 0 2px rgba(42, 33, 24, 0.85),
+    5px 6px 0 2px rgba(42, 33, 24, 0.16),
+    0 14px 22px -10px rgba(42, 33, 24, 0.5);
+}
+
+.leaf-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--ratio, 1);
+  overflow: hidden;
+  background-color: #d8cba9;
+  background-position: center;
+  background-size: cover;
+  /* The small copy is meant to look like pixels, not like a blur. */
+  image-rendering: pixelated;
+}
+
+.leaf-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  image-rendering: auto;
+  transition: opacity 0.5s steps(5);
+  pointer-events: none;
+}
+
+.leaf-frame img.is-ready {
+  opacity: 1;
+}
+
+.leaf-missing {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--on-paper-soft);
+}
+
+.photo-card.is-drawing .leaf-frame {
+  image-rendering: auto;
+}
+
+/* The caption, written on the paper just under the picture. It hangs off
+   the card so the picture stays centred where it was put. */
+.photo-card .leaf-words {
+  position: absolute;
+  top: 100%;
+  left: -12%;
+  right: -12%;
+  margin: 0.5em 0 0;
+  font-family: var(--font-serif), Georgia, serif;
+  font-style: italic;
+  font-size: clamp(0.82rem, 5.2cqw, 1.2rem);
+  line-height: 1.35;
+  text-align: center;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--on-paper);
+}
+
+/* ---- a note ---- */
+
+.leaf-note-card {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  z-index: 5;
+  width: 86%;
+  max-height: 84%;
+  padding: 1.2rem 1.1rem 1.4rem;
+  overflow-y: auto;
+  transform: translate(-50%, -50%) rotate(-1deg);
+  background-color: var(--paper-lit);
+  background-image: repeating-linear-gradient(transparent 0 30px, rgba(140, 106, 37, 0.22) 30px 32px);
+  background-position: 0 1.1rem;
+  box-shadow:
+    0 0 0 2px rgba(42, 33, 24, 0.5),
+    4px 5px 0 2px rgba(42, 33, 24, 0.14);
+}
+
+.leaf-note-card .leaf-words {
+  margin: 0;
+  font-family: var(--font-serif), Georgia, serif;
+  font-style: italic;
+  font-size: 1.32rem;
+  line-height: 32px;
+  text-align: center;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ---- stickers, tape, scraps ---- */
+
+/* A paper-coloured halo one pixel wide, so a sticker reads as stuck on. */
+.pg-sticker-art {
+  display: block;
+  filter:
+    drop-shadow(1px 0 0 var(--paper-lit))
+    drop-shadow(-1px 0 0 var(--paper-lit))
+    drop-shadow(0 1px 0 var(--paper-lit))
+    drop-shadow(0 -1px 0 var(--paper-lit))
+    drop-shadow(2px 3px 0 rgba(42, 33, 24, 0.24));
+}
+
+.pg-tape-strip {
+  display: block;
+  width: 100%;
+  aspect-ratio: 10 / 3;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.14) 0 3px, transparent 3px 7px),
+    var(--tint);
+  box-shadow: inset 0 -3px 0 0 rgba(42, 33, 24, 0.1);
+}
+
+.pg-text-scrap {
+  display: block;
+  width: 100%;
+  padding: 7% 8%;
+  background: var(--paper-lit);
+  background-image: repeating-linear-gradient(45deg, rgba(140, 106, 37, 0.05) 0 2px, transparent 2px 5px);
+  filter: drop-shadow(2px 3px 0 rgba(42, 33, 24, 0.2));
+}
+
+.pg-text-words,
+.pg-text-input {
+  display: block;
+  width: 100%;
+  font-family: var(--font-display), monospace;
+  font-weight: 500;
+  font-size: clamp(0.82rem, 8cqw, 1.6rem);
+  line-height: 1.25;
+  text-align: center;
+  color: var(--on-paper);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.pg-text-input {
+  min-height: 2.6em;
+  padding: 0;
+  margin: 0;
+  border: none;
+  outline: none;
+  resize: none;
+  background: transparent;
+  touch-action: auto;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.pg-text-input::placeholder {
+  color: var(--on-paper-soft);
+}
+
+/* ---- the kiss ---- */
+
+.pg-kiss {
+  position: absolute;
+  left: 80%;
+  top: 84%;
+  z-index: 35;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  width: 17%;
+  transform: translate(-50%, -50%) rotate(var(--tilt, -10deg));
+  pointer-events: none;
+}
+
+.pg-kiss.is-fresh {
+  animation: kiss-land 0.5s steps(5) both;
+}
+
+@keyframes kiss-land {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--tilt, -10deg)) scale(2.2);
+  }
+  55% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--tilt, -10deg)) scale(0.82, 0.7);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(var(--tilt, -10deg)) scale(1);
+  }
+}
+
+.pg-kiss-label {
+  width: 260%;
+  font-size: 0.5rem;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--on-paper-soft);
+  letter-spacing: 0.06em;
+}
+
+.leaf-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 0.9rem;
+  font-size: 0.56rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--on-paper-soft);
+}
+
+/* Other kinds of leaf keep the old box. */
+.leaf-cover,
+.leaf-blank {
+  --photo-h: calc(var(--leaf-w) * 0.74);
+  min-height: calc(var(--leaf-w) * 1.3);
+  padding: calc(var(--leaf-w) * 0.085) calc(var(--leaf-w) * 0.075) calc(var(--leaf-w) * 0.045);
+}
+
+.leaf-blank .leaf-words {
+  font-family: var(--font-serif), Georgia, serif;
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.42;
+  text-align: center;
+}
+
+.leaf-cover {
+  justify-content: center;
+  gap: 0.8rem;
+  color: var(--moonlight);
+  background: #1a2138;
+  box-shadow:
+    0 calc(-1 * var(--u)) 0 0 var(--px-edge),
+    0 var(--u) 0 0 var(--px-edge),
+    calc(-1 * var(--u)) 0 0 0 var(--px-edge),
+    var(--u) 0 0 0 var(--px-edge),
+    inset 0 var(--u) 0 0 var(--brass),
+    inset var(--u) 0 0 0 var(--brass-deep),
+    inset 0 calc(-1 * var(--u)) 0 0 var(--brass-deep),
+    inset calc(-1 * var(--u)) 0 0 0 var(--brass-deep),
+    inset 0 0 0 calc(4 * var(--u)) #1a2138,
+    inset 0 0 0 calc(4 * var(--u) + 2px) rgba(216, 169, 75, 0.4);
+}
+
+.leaf-cover .cover-title {
+  font-size: clamp(1.8rem, 7vw, 2.4rem);
+}
+
+.leaf-cover .cover-names {
+  font-size: 1.2rem;
+}
+
+.cover-for {
+  margin-top: 1.2rem;
+  font-family: var(--font-serif), Georgia, serif;
+  font-style: italic;
+  font-size: 1.3rem;
+  color: var(--moon-dim);
+}
+
+.leaf-blank {
+  justify-content: center;
+  gap: 1.4rem;
+  background-color: #e6d9bb;
+  box-shadow:
+    0 calc(-1 * var(--u)) 0 0 var(--px-edge),
+    0 var(--u) 0 0 var(--px-edge),
+    calc(-1 * var(--u)) 0 0 0 var(--px-edge),
+    var(--u) 0 0 0 var(--px-edge),
+    inset 0 0 0 var(--u) var(--paper-lit),
+    inset 0 0 0 calc(5 * var(--u)) #e6d9bb,
+    inset 0 0 0 calc(5 * var(--u) + 2px) rgba(116, 99, 74, 0.45);
+}
+
+.leaf-blank .leaf-words {
+  flex: 0 0 auto;
+  margin-top: 0;
+  color: var(--on-paper-soft);
+}
+
+/* ---------- turning pages ---------- */
+
+.story-nav {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1rem calc(0.6rem + env(safe-area-inset-bottom));
+  background: rgba(6, 9, 15, 0.94);
+  box-shadow: 0 calc(-1 * var(--u)) 0 0 var(--px-edge);
+}
+
+.story-turn {
+  display: grid;
+  place-items: center;
+  padding: 0.7rem 0.9rem;
+  color: var(--moonlight);
+}

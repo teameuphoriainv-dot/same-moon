@@ -1,0 +1,24 @@
+node_modules/
+.next/
+out/
+.env.local
+spacetime/target/
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+src/lib/photo-manifest.json
+.vercel
+
+.test-build/
+.env*.local
+
+# The second build the browser tests run against.
+.next-probe/
+
+# Dumps of the live database. They hold the messages, so they stay on this machine.
+backups/
+
+.env*.local
+
+# The module name is the only secret protecting the database. Never commit it.
+.stdb-name
