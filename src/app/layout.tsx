@@ -44,6 +44,9 @@ export const viewport: Viewport = {
   themeColor: "#0a0f1c",
   // Lets the dock read the safe area, so it clears the home bar on a phone.
   viewportFit: "cover",
+  // iOS zooms into any input under 16px on focus, which shoved the lock card
+  // off screen in the app shell. Pinch zoom is not used anywhere in the app.
+  maximumScale: 1,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
